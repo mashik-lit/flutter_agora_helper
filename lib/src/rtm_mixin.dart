@@ -2,23 +2,21 @@ import 'dart:developer';
 
 import 'package:agora_rtm/agora_rtm.dart';
 
+import 'agora_rtm_client.dart';
 import 'chat_screen_actions.dart';
 import 'message_model.dart';
 
 mixin AgoraRtmMixin {
-  AgoraRtmClient? client;
+  AgoraRtmClient client = RtmClient.client;
   ChatScreenActions? actions;
   AgoraRtmChannel? channel;
 
   void createChannel(String channelName) async {
-    if (client == null) {
-      throw Exception("initialize AgoraRtmClient before creating a channel");
-    }
     if (actions == null) {
       throw Exception("initialize ChatScreenActions before creating a channel");
     }
     try {
-      channel = await client!.createChannel(channelName);
+      channel = await client.createChannel(channelName);
 
       log("~~Channel ${channel?.channelId ?? 'null'} created");
     } catch (e) {
