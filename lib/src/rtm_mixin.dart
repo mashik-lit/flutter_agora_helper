@@ -1,5 +1,3 @@
-// ignore_for_file: invalid_use_of_protected_member
-
 import 'dart:developer';
 
 import 'package:agora_rtm/agora_rtm.dart';
@@ -55,7 +53,7 @@ mixin AgoraRtmMixin {
 
     actions!.scrollToBottom();
 
-    actions!.setState(() {});
+    actions!.updateUI();
   }
 
   Future<void> onMessageReceived(
@@ -73,6 +71,6 @@ mixin AgoraRtmMixin {
 
     actions!.scrollToBottom();
 
-    actions!.setState(() {});
+    actions!.updateUI();
   }
 }
