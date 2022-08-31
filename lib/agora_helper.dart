@@ -1,7 +1,5 @@
-library agora_helper;
+library flutter_agora_helper;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'src/agora_rtc_engine.dart';
+export 'src/agora_rtm_client.dart';
+export 'src/rtm_mixin.dart';
