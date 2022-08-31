@@ -11,10 +11,10 @@ mixin RtcMixin {
     UidWithElapsedAndChannelCallback? joinChannelSuccess,
     UidWithElapsedCallback? userJoined,
     UserOfflineCallback? userOffline,
-    bool localAudioMuted = false,
-    bool localVideoStopped = false,
-    bool remoteAudioMuted = false,
-    bool remoteVideoStopped = false,
+    bool publishLocalAudio = false,
+    bool publishLocalVideo = false,
+    bool autoSubscribeAudio = false,
+    bool autoSubscribeVideo = false,
   }) async {
     if (rtcEngine == null) {
       throw Exception('Initialize rtcEngine before ini');
@@ -47,10 +47,10 @@ mixin RtcMixin {
         null,
         optionalUid,
         ChannelMediaOptions(
-          publishLocalAudio: !localAudioMuted,
-          publishLocalVideo: !localVideoStopped,
-          autoSubscribeAudio: !remoteAudioMuted,
-          autoSubscribeVideo: !remoteVideoStopped,
+          publishLocalAudio: publishLocalAudio,
+          publishLocalVideo: publishLocalVideo,
+          autoSubscribeAudio: autoSubscribeAudio,
+          autoSubscribeVideo: autoSubscribeVideo,
         ),
       );
 
