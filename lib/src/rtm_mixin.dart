@@ -1,19 +1,23 @@
+// ignore_for_file: invalid_use_of_protected_member
+
 import 'dart:developer';
 
 import 'package:agora_rtm/agora_rtm.dart';
 
+import 'chat_screen_actions.dart';
+import 'message_model.dart';
+
 mixin AgoraRtmMixin {
   AgoraRtmClient? client;
-  late void Function(
-    AgoraRtmMessage message,
-    AgoraRtmMember fromMember,
-  )? onMessageReceived;
-
-  late AgoraRtmChannel? channel;
+  ChatScreenActions? actions;
+  AgoraRtmChannel? channel;
 
   void createChannel(String channelName) async {
     if (client == null) {
       throw Exception("initialize AgoraRtmClient before creating a channel");
+    }
+    if (actions == null) {
+      throw Exception("initialize ChatScreenActions before creating a channel");
     }
     try {
       channel = await client!.createChannel(channelName);
@@ -32,22 +36,43 @@ mixin AgoraRtmMixin {
       log("~~Channel join error: ${e.toString()}");
     }
 
-    if (onMessageReceived != null) {
-      channel!.onMessageReceived = onMessageReceived;
-    } else {
-      log("~~No onMessageReceived callback assigned");
-    }
+    channel!.onMessageReceived = onMessageReceived;
   }
 
-  Future<void> sendMessage(String message) async {
+  Future<void> sendMessage(MessageModel message) async {
     if (channel == null) {
       throw Exception("Initialize the channel to send a message");
     }
     try {
-      await channel!.sendMessage(AgoraRtmMessage.fromText(message));
+      await channel!.sendMessage(AgoraRtmMessage.fromText(message.toString()));
       log("~~message sent to ${channel!.channelId}");
     } catch (e) {
       log("~~sendMessage Error: ${e.toString()}");
     }
+    actions!.saveMessage(message);
+
+    actions!.addToList(message);
+
+    actions!.scrollToBottom();
+
+    actions!.setState(() {});
+  }
+
+  Future<void> onMessageReceived(
+    AgoraRtmMessage message,
+    AgoraRtmMember fromMember,
+  ) async {
+    log("~~message_received: ${message.text}");
+    if (message.text.contains('join_video_call')) {
+      actions!.initiateVideoCall();
+      return;
+    }
+    final messageModel = MessageModel.fromJson(message.text);
+
+    actions!.addToList(messageModel, received: true);
+
+    actions!.scrollToBottom();
+
+    actions!.setState(() {});
   }
 }
