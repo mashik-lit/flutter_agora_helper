@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:agora_rtm/agora_rtm.dart';
+import 'package:flutter_agora_helper/agora_helper.dart';
 
 import 'agora_rtm_client.dart';
 import 'chat_screen_actions.dart';
@@ -59,11 +60,12 @@ mixin AgoraRtmMixin {
     AgoraRtmMember fromMember,
   ) async {
     log("~~message_received: ${message.text}");
-    if (message.text.contains('join_video_call')) {
-      actions!.initiateVideoCall();
+    final messageModel = MessageModel.fromJson(message.text);
+    if (messageModel.type == MessageTypes.audioCallRequest ||
+        messageModel.type == MessageTypes.videoCallRequest) {
+      actions!.initiateVideoCall(messageModel.type);
       return;
     }
-    final messageModel = MessageModel.fromJson(message.text);
 
     actions!.addToList(messageModel, received: true);
 
