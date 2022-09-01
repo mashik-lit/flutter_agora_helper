@@ -7,3 +7,4 @@ export 'src/message_model.dart';
 export 'src/message_types.dart';
 export 'src/rtc_mixin.dart';
 export 'src/rtm_mixin.dart';
+export 'src/video_call_screen.dart';
