@@ -25,7 +25,7 @@ class VideoCallScreen extends StatefulWidget {
   final String token;
   final bool audioOnly;
   final int uid;
-  final VoidCallback? onPop;
+  final ValueChanged<int>? onPop;
 
   @override
   State<VideoCallScreen> createState() => _VideoCallScreenState();
@@ -64,6 +64,9 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
           setState(() {
             _remoteUserId = null;
           });
+          if (widget.onPop != null) {
+            widget.onPop!(0);
+          }
         },
         publishLocalAudio: !localAudioMuted,
         publishLocalVideo: !localVideoStopped,
@@ -140,7 +143,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
                     onPressed: () {
                       rtcEngine!.leaveChannel();
                       if (widget.onPop != null) {
-                        widget.onPop!();
+                        widget.onPop!(1);
                       }
                     },
                     isRed: true,

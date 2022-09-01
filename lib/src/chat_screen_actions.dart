@@ -1,3 +1,4 @@
+import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter_agora_helper/agora_helper.dart';
 
 abstract class ChatScreenActions {
@@ -6,4 +7,6 @@ abstract class ChatScreenActions {
   void addToList(MessageModel model, {bool received = false});
   void scrollToBottom();
   void updateUI();
+  void onMemberLeft(AgoraRtmMember member);
+  void onMemberJoined(AgoraRtmMember member);
 }

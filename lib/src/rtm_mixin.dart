@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:agora_rtm/agora_rtm.dart';
-import 'package:flutter_agora_helper/agora_helper.dart';
 
 import 'agora_rtm_client.dart';
 import 'chat_screen_actions.dart';
 import 'message_model.dart';
+import 'message_types.dart';
 
 mixin AgoraRtmMixin {
   AgoraRtmClient client = RtmClient.client;
@@ -34,6 +34,8 @@ mixin AgoraRtmMixin {
     }
 
     channel!.onMessageReceived = onMessageReceived;
+    channel!.onMemberLeft = actions!.onMemberLeft;
+    channel!.onMemberJoined = actions!.onMemberJoined;
   }
 
   Future<void> sendMessage(MessageModel message) async {
