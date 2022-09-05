@@ -40,8 +40,8 @@ mixin AgoraRtmMixin {
     actions!.updateUI();
 
     channel!.onMessageReceived = onMessageReceived;
-    channel!.onMemberLeft = actions!.onMemberLeft;
-    channel!.onMemberJoined = actions!.onMemberJoined;
+    channel!.onMemberLeft = onMemberLeft;
+    channel!.onMemberJoined = onMemberJoined;
   }
 
   Future<void> sendMessage(MessageModel message) async {
@@ -80,5 +80,15 @@ mixin AgoraRtmMixin {
     actions!.scrollToBottom();
 
     actions!.updateUI();
+  }
+
+  void onMemberJoined(AgoraRtmMember member) {
+    theOtherIsOnline = true;
+    actions!.updateUI();
+  }
+
+  void onMemberLeft(AgoraRtmMember member) {
+    theOtherIsOnline = false;
+     actions!.updateUI();
   }
 }
