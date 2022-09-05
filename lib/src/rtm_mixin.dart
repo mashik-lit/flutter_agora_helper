@@ -11,8 +11,9 @@ mixin AgoraRtmMixin {
   AgoraRtmClient client = RtmClient.client;
   ChatScreenActions? actions;
   AgoraRtmChannel? channel;
+  bool theOtherIsOnline = false;
 
-  void createChannel(String channelName) async {
+  Future<void> createChannel(String channelName) async {
     if (actions == null) {
       throw Exception("initialize ChatScreenActions before creating a channel");
     }
@@ -29,9 +30,14 @@ mixin AgoraRtmMixin {
     try {
       await channel!.join();
       log("~~Joined in channel ${channel?.channelId ?? 'null'}");
-    } on Exception catch (e) {
+    } catch (e) {
       log("~~Channel join error: ${e.toString()}");
+      return;
     }
+
+    final membersList = await channel!.getMembers();
+    theOtherIsOnline = membersList.length > 1;
+    actions!.updateUI();
 
     channel!.onMessageReceived = onMessageReceived;
     channel!.onMemberLeft = actions!.onMemberLeft;
