@@ -54,6 +54,10 @@ mixin AgoraRtmMixin {
     } catch (e) {
       log("~~sendMessage Error: ${e.toString()}");
     }
+    if (message.type == MessageTypes.audioCallRequest ||
+        message.type == MessageTypes.audioCallRequest) {
+      return;
+    }
     actions!.saveMessage(message);
 
     actions!.addToList(message);
@@ -89,6 +93,6 @@ mixin AgoraRtmMixin {
 
   void onMemberLeft(AgoraRtmMember member) {
     theOtherIsOnline = false;
-     actions!.updateUI();
+    actions!.updateUI();
   }
 }
