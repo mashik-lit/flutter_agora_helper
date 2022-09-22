@@ -33,8 +33,8 @@ class MessageModel {
     switch (type) {
       case MessageTypes.text:
         return 'text';
-      case MessageTypes.pdf:
-        return 'pdf';
+      case MessageTypes.prescription:
+        return 'prescription';
       case MessageTypes.image:
         return 'image';
       case MessageTypes.audio:
@@ -52,8 +52,8 @@ class MessageModel {
     switch (string) {
       case 'text':
         return MessageTypes.text;
-      case 'pdf':
-        return MessageTypes.pdf;
+      case 'prescription':
+        return MessageTypes.prescription;
       case 'image':
         return MessageTypes.image;
       case 'audio':

@@ -1,6 +1,6 @@
 enum MessageTypes {
   text,
-  pdf,
+  prescription,
   image,
   audio,
   video,
