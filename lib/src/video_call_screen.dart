@@ -45,43 +45,41 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
     rtcEngine = AgoraRtcEngine.rtcEngine;
     localVideoStopped = remoteVideoStopped = widget.audioOnly;
     WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) => joinRTCCall(
-        channelName: widget.channelName,
-        optionalUid: widget.uid,
-        token: widget.token,
-        joinChannelSuccess: (String channel, int uid, int elapsed) {
-          log("~~local user $uid joined");
-          setState(() {});
-        },
-        userJoined: (int uid, int elapsed) {
-          log("~~remote user $uid joined");
-          setState(() {
-            _remoteUserId = uid;
-          });
-        },
-        userOffline: (int uid, UserOfflineReason reason) {
-          log("~~remote user $uid left channel");
-          setState(() {
-            _remoteUserId = null;
-          });
-          if (widget.onPop != null) {
-            widget.onPop!(0);
-          }
-        },
-        publishLocalAudio: !localAudioMuted,
-        publishLocalVideo: !localVideoStopped,
-        autoSubscribeAudio: !remoteAudioMuted,
-        autoSubscribeVideo: !remoteVideoStopped,
-      ),
+      (timeStamp) {
+        joinRTCCall(
+          channelName: widget.channelName,
+          optionalUid: widget.uid,
+          token: widget.token,
+          joinChannelSuccess: (String channel, int uid, int elapsed) {
+            log("~~local user $uid joined");
+            setState(() {});
+          },
+          userJoined: (int uid, int elapsed) {
+            log("~~remote user $uid joined");
+            setState(() {
+              _remoteUserId = uid;
+            });
+          },
+          userOffline: (int uid, UserOfflineReason reason) {
+            log("~~remote user $uid left channel");
+            setState(() {
+              _remoteUserId = null;
+            });
+            if (widget.onPop != null) {
+              widget.onPop!(0);
+            }
+          },
+        );
+        rtcEngine!.muteLocalAudioStream(localAudioMuted);
+        rtcEngine!.muteAllRemoteAudioStreams(remoteAudioMuted);
+        rtcEngine!.muteLocalVideoStream(localVideoStopped);
+        rtcEngine!.muteAllRemoteVideoStreams(remoteVideoStopped);
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    log("~~localAudioMuted: $localAudioMuted");
-    log("~~localVideoStopped: $localVideoStopped");
-    log("~~remoteAudioMuted: $remoteAudioMuted");
-    log("~~remoteVideoStopped: $remoteVideoStopped");
     return Scaffold(
       body: SafeArea(
         child: Stack(

@@ -11,10 +11,6 @@ mixin RtcMixin {
     UidWithElapsedAndChannelCallback? joinChannelSuccess,
     UidWithElapsedCallback? userJoined,
     UserOfflineCallback? userOffline,
-    bool publishLocalAudio = false,
-    bool publishLocalVideo = false,
-    bool autoSubscribeAudio = false,
-    bool autoSubscribeVideo = false,
   }) async {
     if (rtcEngine == null) {
       throw Exception('Initialize rtcEngine before ini');
@@ -46,12 +42,7 @@ mixin RtcMixin {
         channelName,
         null,
         optionalUid,
-        ChannelMediaOptions(
-          publishLocalAudio: publishLocalAudio,
-          publishLocalVideo: publishLocalVideo,
-          autoSubscribeAudio: autoSubscribeAudio,
-          autoSubscribeVideo: autoSubscribeVideo,
-        ),
+        ChannelMediaOptions(),
       );
 
       log("~~joinChannel Success");
