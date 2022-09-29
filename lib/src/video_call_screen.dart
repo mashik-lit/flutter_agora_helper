@@ -48,19 +48,22 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
     log("~~remoteAudioMuted: $remoteAudioMuted");
     log("~~localVideoStopped: $localVideoStopped");
     log("~~remoteVideoStopped: $remoteVideoStopped");
-    rtcEngine!.setVideoEncoderConfiguration(
+   
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => setupCall());
+  }
+
+  Future<void> setupCall() async {
+    await rtcEngine!.setVideoEncoderConfiguration(
       VideoEncoderConfiguration(
         orientationMode: VideoOutputOrientationMode.FixedPortrait,
         degradationPreference: DegradationPreference.MaintainQuality,
       ),
     );
-    rtcEngine!.muteLocalAudioStream(localAudioMuted);
-    rtcEngine!.muteAllRemoteAudioStreams(remoteAudioMuted);
-    rtcEngine!.muteLocalVideoStream(localVideoStopped);
-    rtcEngine!.muteAllRemoteVideoStreams(remoteVideoStopped);
-    WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) {
-        joinRTCCall(
+    await rtcEngine!.muteLocalAudioStream(localAudioMuted);
+    await rtcEngine!.muteAllRemoteAudioStreams(remoteAudioMuted);
+    await rtcEngine!.muteLocalVideoStream(localVideoStopped);
+    await rtcEngine!.muteAllRemoteVideoStreams(remoteVideoStopped);
+        await  joinRTCCall(
           channelName: widget.channelName,
           optionalUid: widget.uid,
           token: widget.token,
@@ -84,10 +87,8 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
             }
           },
         );
-      },
-    );
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
