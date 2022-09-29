@@ -48,6 +48,12 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
     log("~~remoteAudioMuted: $remoteAudioMuted");
     log("~~localVideoStopped: $localVideoStopped");
     log("~~remoteVideoStopped: $remoteVideoStopped");
+    rtcEngine!.setVideoEncoderConfiguration(
+      VideoEncoderConfiguration(
+        orientationMode: VideoOutputOrientationMode.FixedPortrait,
+        degradationPreference: DegradationPreference.MaintainQuality,
+      ),
+    );
     rtcEngine!.muteLocalAudioStream(localAudioMuted);
     rtcEngine!.muteAllRemoteAudioStreams(remoteAudioMuted);
     rtcEngine!.muteLocalVideoStream(localVideoStopped);
@@ -77,13 +83,6 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
               widget.onPop!(0);
             }
           },
-        );
-
-        rtcEngine!.setVideoEncoderConfiguration(
-          VideoEncoderConfiguration(
-            orientationMode: VideoOutputOrientationMode.FixedPortrait,
-            degradationPreference: DegradationPreference.MaintainQuality,
-          ),
         );
       },
     );
