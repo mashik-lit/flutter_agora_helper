@@ -55,7 +55,7 @@ mixin AgoraRtmMixin {
       log("~~sendMessage Error: ${e.toString()}");
     }
     if (message.type == MessageTypes.audioCallRequest ||
-        message.type == MessageTypes.audioCallRequest) {
+        message.type == MessageTypes.videoCallRequest) {
       return;
     }
     actions!.saveMessage(message);
