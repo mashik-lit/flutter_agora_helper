@@ -70,14 +70,14 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
             }
           },
         );
-        log("~~localAudioMuted: $localAudioMuted");
-        log("~~remoteAudioMuted: $remoteAudioMuted");
-        log("~~localVideoStopped: $localVideoStopped");
-        log("~~remoteVideoStopped: $remoteVideoStopped");
-        rtcEngine!.muteLocalAudioStream(localAudioMuted);
-        rtcEngine!.muteAllRemoteAudioStreams(remoteAudioMuted);
-        rtcEngine!.muteLocalVideoStream(localVideoStopped);
-        rtcEngine!.muteAllRemoteVideoStreams(remoteVideoStopped);
+        // log("~~localAudioMuted: $localAudioMuted");
+        // log("~~remoteAudioMuted: $remoteAudioMuted");
+        // log("~~localVideoStopped: $localVideoStopped");
+        // log("~~remoteVideoStopped: $remoteVideoStopped");
+        // rtcEngine!.muteLocalAudioStream(localAudioMuted);
+        // rtcEngine!.muteAllRemoteAudioStreams(remoteAudioMuted);
+        // rtcEngine!.muteLocalVideoStream(localVideoStopped);
+        // rtcEngine!.muteAllRemoteVideoStreams(remoteVideoStopped);
       },
     );
   }
