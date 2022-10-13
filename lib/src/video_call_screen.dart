@@ -43,11 +43,6 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
   void initState() {
     super.initState();
     rtcEngine = AgoraRtcEngine.rtcEngine;
-    localVideoStopped = remoteVideoStopped = widget.audioOnly;
-    log("~~localAudioMuted: $localAudioMuted");
-    log("~~remoteAudioMuted: $remoteAudioMuted");
-    log("~~localVideoStopped: $localVideoStopped");
-    log("~~remoteVideoStopped: $remoteVideoStopped");
    
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) => setupCall());
   }
@@ -59,13 +54,10 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
         degradationPreference: DegradationPreference.MaintainQuality,
       ),
     );
-    await rtcEngine!.muteLocalAudioStream(localAudioMuted);
-    await rtcEngine!.muteAllRemoteAudioStreams(remoteAudioMuted);
-    await rtcEngine!.muteLocalVideoStream(localVideoStopped);
-    await rtcEngine!.muteAllRemoteVideoStreams(remoteVideoStopped);
         await  joinRTCCall(
           channelName: widget.channelName,
           optionalUid: widget.uid,
+          audioOnly: widget.audioOnly,
           token: widget.token,
           joinChannelSuccess: (String channel, int uid, int elapsed) {
             log("~~local user $uid joined");

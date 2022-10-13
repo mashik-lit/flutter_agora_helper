@@ -8,6 +8,7 @@ mixin RtcMixin {
     required String channelName,
     required int optionalUid,
     String? token,
+    bool audioOnly = false,
     UidWithElapsedAndChannelCallback? joinChannelSuccess,
     UidWithElapsedCallback? userJoined,
     UserOfflineCallback? userOffline,
@@ -31,7 +32,9 @@ mixin RtcMixin {
       log("~~Error Event handlers Set: ${e.toString()}");
     }
 
-    rtcEngine!.enableVideo();
+    if (!audioOnly) {
+      rtcEngine!.enableVideo();
+    }
 
     try {
       rtcEngine!.leaveChannel();
