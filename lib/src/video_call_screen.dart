@@ -1,10 +1,8 @@
 import 'dart:developer';
 
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 
-import 'package:agora_rtc_engine/rtc_engine.dart';
-import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_view;
-import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_view;
 import 'package:flutter_agora_helper/agora_helper.dart';
 
 import '../gen/assets.gen.dart';
@@ -33,6 +31,8 @@ class VideoCallScreen extends StatefulWidget {
 
 class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
   int? _remoteUserId;
+  int? _localUserId;
+  RtcConnection? _connection;
 
   bool localAudioMuted = false;
   bool localVideoStopped = false;
@@ -43,44 +43,45 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
   void initState() {
     super.initState();
     rtcEngine = AgoraRtcEngine.rtcEngine;
-   
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) => setupCall());
   }
 
   Future<void> setupCall() async {
     await rtcEngine!.setVideoEncoderConfiguration(
-      VideoEncoderConfiguration(
-        orientationMode: VideoOutputOrientationMode.FixedPortrait,
-        degradationPreference: DegradationPreference.MaintainQuality,
+      const VideoEncoderConfiguration(
+        orientationMode: OrientationMode.orientationModeFixedPortrait,
+        degradationPreference: DegradationPreference.maintainQuality,
       ),
     );
-        await  joinRTCCall(
-          channelName: widget.channelName,
-          optionalUid: widget.uid,
-          audioOnly: widget.audioOnly,
-          token: widget.token,
-          joinChannelSuccess: (String channel, int uid, int elapsed) {
-            log("~~local user $uid joined");
-            setState(() {});
-          },
-          userJoined: (int uid, int elapsed) {
-            log("~~remote user $uid joined");
-            setState(() {
-              _remoteUserId = uid;
-            });
-          },
-          userOffline: (int uid, UserOfflineReason reason) {
-            log("~~remote user $uid left channel");
-            setState(() {
-              _remoteUserId = null;
-            });
-            if (widget.onPop != null) {
-              widget.onPop!(0);
-            }
-          },
-        );
+    await joinRTCCall(
+      channelName: widget.channelName,
+      optionalUid: widget.uid,
+      audioOnly: widget.audioOnly,
+      token: widget.token,
+      onJoinChannelSuccess: (connection, elapsed) {
+        log("~~local user ${connection.localUid} joined");
+        _localUserId = connection.localUid;
+        setState(() {});
+      },
+      onUserJoined: (connection, remoteUid, elapsed) {
+        log("~~remote user $remoteUid joined");
+        setState(() {
+          _remoteUserId = remoteUid;
+        });
+      },
+      onUserOffline: (connection, remoteUid, reason) {
+        log("~~remote user $remoteUid left channel");
+        setState(() {
+          _remoteUserId = null;
+        });
+        if (widget.onPop != null) {
+          widget.onPop!(0);
+        }
+      },
+    );
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,10 +163,12 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
   }
 
   Widget _renderRemoteVideo() {
-    if (_remoteUserId != null) {
-      return rtc_remote_view.SurfaceView(
-        uid: _remoteUserId!,
-        channelId: widget.channelName,
+    if (_remoteUserId != null && rtcEngine != null) {
+      return AgoraVideoView(
+        controller: VideoViewController(
+          rtcEngine: rtcEngine!,
+          canvas: VideoCanvas(uid: _remoteUserId),
+        ),
       );
     } else {
       return Text(
@@ -176,7 +179,17 @@ class _VideoCallScreenState extends State<VideoCallScreen> with RtcMixin {
   }
 
   Widget _renderLocalPreview() {
-    return const rtc_local_view.SurfaceView();
+    if (rtcEngine != null && _connection != null) {
+      return AgoraVideoView(
+        controller: VideoViewController.remote(
+          rtcEngine: rtcEngine!,
+          canvas: VideoCanvas(uid: _localUserId),
+          connection: _connection!,
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }
 

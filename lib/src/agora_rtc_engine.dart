@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 
 class AgoraRtcEngine {
   static late RtcEngine rtcEngine;
@@ -13,7 +13,10 @@ class AgoraRtcEngine {
   static Future<void> initialize(String appId) async {
     log('~~initializing agoraRtcEngine');
     try {
-      final engine = await RtcEngine.create(appId);
+      final engine = createAgoraRtcEngine();
+      engine.initialize(RtcEngineContext(
+        appId: appId,
+      ));
       _instance ??= AgoraRtcEngine._(engine);
     } catch (e) {
       log('~~error initializing agoraRtcEngine');
