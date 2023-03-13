@@ -5,7 +5,7 @@
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
-// ignore_for_file: directives_ordering,unnecessary_import
+// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,6 +16,9 @@ class $FontsGen {
 
   /// File path: fonts/DMSans-Medium.ttf
   String get dMSansMedium => 'fonts/DMSans-Medium.ttf';
+
+  /// List of all assets
+  List<String> get values => [dMSansMedium];
 }
 
 class $AssetsIconsGen {
@@ -46,6 +49,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/volume-slash.svg
   SvgGenImage get volumeSlash =>
       const SvgGenImage('assets/icons/volume-slash.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [
+        callSlash,
+        microphone2,
+        microphoneSlash,
+        videoSlash,
+        video2,
+        volumeHigh,
+        volumeSlash
+      ];
 }
 
 class Assets {
@@ -113,6 +127,8 @@ class AssetGenImage {
     );
   }
 
+  ImageProvider provider() => AssetImage(_assetName);
+
   String get path => _assetName;
 
   String get keyName => _assetName;
@@ -154,15 +170,18 @@ class SvgGenImage {
       alignment: alignment,
       allowDrawingOutsideViewBox: allowDrawingOutsideViewBox,
       placeholderBuilder: placeholderBuilder,
-      color: color,
-      colorBlendMode: colorBlendMode,
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
-      clipBehavior: clipBehavior,
-      cacheColorFilter: cacheColorFilter,
-      theme: theme,
+       colorFilter: color == null
+          ? null
+          : ColorFilter.mode(
+              color,
+              BlendMode.srcATop,
+            ),
     );
   }
 
   String get path => _assetName;
+
+  String get keyName => _assetName;
 }
