@@ -16,7 +16,10 @@ class AgoraRtcEngine {
       final engine = createAgoraRtcEngine();
       engine.initialize(RtcEngineContext(
         appId: appId,
+        channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
       ));
+
+      await engine.enableVideo();
       _instance ??= AgoraRtcEngine._(engine);
     } catch (e) {
       log('~~error initializing agoraRtcEngine');
