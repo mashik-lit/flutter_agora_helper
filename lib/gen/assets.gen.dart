@@ -27,6 +27,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/call-slash.svg
   SvgGenImage get callSlash => const SvgGenImage('assets/icons/call-slash.svg');
 
+  /// File path: assets/icons/call_3.svg
+  SvgGenImage get call3 => const SvgGenImage('assets/icons/call_3.svg');
+
   /// File path: assets/icons/microphone-2.svg
   SvgGenImage get microphone2 =>
       const SvgGenImage('assets/icons/microphone-2.svg');
@@ -34,6 +37,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/microphone-slash.svg
   SvgGenImage get microphoneSlash =>
       const SvgGenImage('assets/icons/microphone-slash.svg');
+
+  /// File path: assets/icons/profile_light_2.svg
+  SvgGenImage get profileLight2 =>
+      const SvgGenImage('assets/icons/profile_light_2.svg');
 
   /// File path: assets/icons/video-slash.svg
   SvgGenImage get videoSlash =>
@@ -53,8 +60,10 @@ class $AssetsIconsGen {
   /// List of all assets
   List<SvgGenImage> get values => [
         callSlash,
+        call3,
         microphone2,
         microphoneSlash,
+        profileLight2,
         videoSlash,
         video2,
         volumeHigh,
@@ -170,14 +179,12 @@ class SvgGenImage {
       alignment: alignment,
       allowDrawingOutsideViewBox: allowDrawingOutsideViewBox,
       placeholderBuilder: placeholderBuilder,
+      color: color,
+      colorBlendMode: colorBlendMode,
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
-       colorFilter: color == null
-          ? null
-          : ColorFilter.mode(
-              color,
-              BlendMode.srcATop,
-            ),
+      clipBehavior: clipBehavior,
+      cacheColorFilter: cacheColorFilter,
     );
   }
 

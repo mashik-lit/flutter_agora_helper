@@ -12,7 +12,7 @@ class MessageModel {
   final String message;
 
   @override
-  String toString() => '{"type": "${typeString(type)}", "message": "$message"}';
+  String toString() => '{"type": "${type.toString()}", "message": "$message"}';
 
   factory MessageModel.textMessage(String message) => MessageModel(
         message: message,
@@ -31,7 +31,7 @@ class MessageModel {
 
   factory MessageModel.fromMap(Map<String, dynamic> map) {
     return MessageModel(
-      type: getType(map['type']),
+      type: MessageTypes.fromString(map['type']),
       message: map['message'] ?? '',
     );
   }

@@ -1,7 +1,5 @@
-import 'dart:developer';
-
 import 'package:agora_rtm/agora_rtm.dart';
-
+import 'package:flutter_agora_helper/src/logger.dart';
 
 class RtmClient {
   static late AgoraRtmClient client;
@@ -10,12 +8,29 @@ class RtmClient {
   RtmClient._(AgoraRtmClient rtmClient) {
     client = rtmClient;
 
+//     client.sendLocalInvitation({
+//       "calleeId": "2",
+//       "content": "",
+//       "channelId": "rtc-35-10",
+//     });
+
+//     client.cancelLocalInvitation({
+//       "calleeId": "2",
+//       "content": "",
+//       "channelId": "rtc-35-10",
+//     });
+// client.onLocalInvitationAccepted = null;
+
+// client.localinvi
+
+    // client.acceptRemoteInvitation(arguments)
+
     client.onMessageReceived = (AgoraRtmMessage message, String peerId) {
       log("Peer msg: $peerId, msg: ${message.text}");
     };
 
     client.onConnectionStateChanged = (int state, int reason) {
-      log('~~csc: ${connectionState(state)}, reason: ${connectionChangeReason(reason)}');
+      log('csc: ${connectionState(state)}, reason: ${connectionChangeReason(reason)}');
       if (state == 5) {
         client.logout();
         log('Logout.');
@@ -33,11 +48,10 @@ class RtmClient {
   }
 
   static Future<void> initialize(String appId) async {
-    log('~~initializing agoraRtmClient');
-    _instance ??=
-        RtmClient._(await AgoraRtmClient.createInstance(appId));
+    log('initializing agoraRtmClient');
+    _instance ??= RtmClient._(await AgoraRtmClient.createInstance(appId));
 
-    log('~~initialized agoraRtmClient');
+    log('initialized agoraRtmClient');
   }
 }
 

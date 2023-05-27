@@ -5,11 +5,11 @@ enum MessageTypes {
   audio,
   video,
   audioCallRequest,
-  videoCallRequest
-}
+  videoCallRequest;
 
-String typeString(MessageTypes type) {
-    switch (type) {
+  @override
+  String toString() {
+    switch (this) {
       case MessageTypes.text:
         return 'text';
       case MessageTypes.prescription:
@@ -26,7 +26,8 @@ String typeString(MessageTypes type) {
         return 'audio_call_request';
     }
   }
- MessageTypes getType(String string) {
+
+  static MessageTypes fromString(String string) {
     switch (string) {
       case 'text':
         return MessageTypes.text;
@@ -46,3 +47,4 @@ String typeString(MessageTypes type) {
         return MessageTypes.text;
     }
   }
+}

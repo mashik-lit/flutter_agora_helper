@@ -6,4 +6,5 @@ export 'src/chat_screen_actions.dart';
 export 'src/message_model.dart';
 export 'src/message_types.dart';
 export 'src/rtm_mixin.dart';
-export 'src/video_call_screen.dart';
+export 'ui/video_call_screen.dart';
+export 'ui/buttons.dart';

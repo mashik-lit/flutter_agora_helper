@@ -1,6 +1,7 @@
-import 'dart:developer';
+import 'dart:async';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:flutter_agora_helper/src/logger.dart';
 
 class AgoraRtcEngine {
   static late RtcEngine rtcEngine;
@@ -11,7 +12,7 @@ class AgoraRtcEngine {
   }
 
   static Future<void> initialize(String appId) async {
-    log('~~initializing agoraRtcEngine');
+    log('initiazing agoraRtcEngine');
     try {
       final engine = createAgoraRtcEngine();
       engine.initialize(RtcEngineContext(
@@ -19,12 +20,11 @@ class AgoraRtcEngine {
         channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
       ));
 
-      await engine.enableVideo();
       _instance ??= AgoraRtcEngine._(engine);
     } catch (e) {
-      log('~~error initializing agoraRtcEngine');
+      log('error initializing agoraRtcEngine');
     }
 
-    log('~~initialized agoraRtcEngine');
+    log('initialized agoraRtcEngine');
   }
 }

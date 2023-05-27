@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:flutter_agora_helper/src/logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -52,40 +51,38 @@ class VideoCallController extends StateNotifier<void> {
 
     await rtcEngine.setVideoEncoderConfiguration(configuration);
 
-    await rtcEngine.enableVideo();
-
     try {
       rtcEngine.registerEventHandler(RtcEngineEventHandler(
         onJoinChannelSuccess: (connection, elapsed) {
-          log("~~local user ${connection.localUid} joined in ${connection.channelId}");
+          log("local user ${connection.localUid} joined in ${connection.channelId}");
 
           ref.read(joinedInChannel.notifier).state = true;
           try {
             rtcEngine.startPreview(
-              sourceType: VideoSourceType.videoSourceCameraSecondary,
+              sourceType: VideoSourceType.videoSourceCamera,
             );
           } catch (e) {
-            log("~~startPreview-Error: ${e.toString()}");
+            log("startPreview-Error: ${e.toString()}");
           }
         },
         onUserJoined: (connection, remoteUid, elapsed) {
-          log("~~remote user $remoteUid joined in ${connection.channelId}");
+          log("remote user $remoteUid joined in ${connection.channelId}");
           ref.read(remoteUser.notifier).state = remoteUid;
         },
         onUserOffline: (connection, remoteUid, reason) {
-          log("~~remote user $remoteUid left ${connection.channelId}");
+          log("remote user $remoteUid left ${connection.channelId}");
           leave();
         },
         onError: (err, msg) {
-          log("~~Error: ${err.name} - $msg");
+          log("Error: ${err.name} - $msg");
         },
         onPermissionError: (permissionType) {
-          log("~~PermissionError: ${permissionType.name}");
+          log("PermissionError: ${permissionType.name}");
         },
       ));
-      log("~~Event handlers Set");
+      log("Event handlers Set");
     } catch (e) {
-      log("~~Error Event handlers Set: ${e.toString()}");
+      log("Error Event handlers Set: ${e.toString()}");
     }
   }
 
@@ -93,12 +90,14 @@ class VideoCallController extends StateNotifier<void> {
     required String channelName,
     required int uid,
     required String token,
-    bool audioOnly = false,
+    required bool audioOnly ,
     required ClientRoleType role,
   }) async {
-    // await rtcEngine.startPreview();
     try {
-      log("~~joining channel : $channelName, role: ${role.toString()}");
+      if (!audioOnly) {
+        await rtcEngine.enableVideo();
+      }
+      log("joining channel : $channelName, role: ${role.toString()}");
 
       await rtcEngine.joinChannel(
         token: token,
@@ -110,10 +109,9 @@ class VideoCallController extends StateNotifier<void> {
         ),
       );
 
-      log("~~joinChannel Success");
-      // rtcEngine.startPreview();
+      log("joinChannel Success");
     } catch (e) {
-      log("~~joinChannel Error: ${e.toString()}");
+      log("joinChannel Error: ${e.toString()}");
     }
   }
 

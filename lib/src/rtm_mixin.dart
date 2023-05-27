@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:agora_rtm/agora_rtm.dart';
+import 'package:flutter_agora_helper/src/logger.dart';
 
 import 'agora_rtm_client.dart';
 import 'chat_screen_actions.dart';
@@ -20,18 +19,18 @@ mixin AgoraRtmMixin {
     try {
       channel = await client.createChannel(channelName);
 
-      log("~~Channel ${channel?.channelId ?? 'null'} created");
+      log("Channel ${channel?.channelId ?? 'null'} created");
     } catch (e) {
-      log("~~Channel creation error: ${e.toString()}");
+      log("Channel creation error: ${e.toString()}");
     }
 
     if (channel == null) return;
 
     try {
       await channel!.join();
-      log("~~Joined in channel ${channel?.channelId ?? 'null'}");
+      log("Joined in channel ${channel?.channelId ?? 'null'}");
     } catch (e) {
-      log("~~Channel join error: ${e.toString()}");
+      log("Channel join error: ${e.toString()}");
       return;
     }
 
@@ -50,9 +49,9 @@ mixin AgoraRtmMixin {
     }
     try {
       await channel!.sendMessage(AgoraRtmMessage.fromText(message.toString()));
-      log("~~message sent to ${channel!.channelId}");
+      log("message sent to ${channel!.channelId}");
     } catch (e) {
-      log("~~sendMessage Error: ${e.toString()}");
+      log("sendMessage Error: ${e.toString()}");
     }
     if (message.type == MessageTypes.audioCallRequest ||
         message.type == MessageTypes.videoCallRequest) {
@@ -71,13 +70,8 @@ mixin AgoraRtmMixin {
     AgoraRtmMessage message,
     AgoraRtmMember fromMember,
   ) async {
-    log("~~message_received: ${message.text}");
+    log("essage_received: ${message.text}");
     final messageModel = MessageModel.fromJson(message.text);
-    if (messageModel.type == MessageTypes.audioCallRequest ||
-        messageModel.type == MessageTypes.videoCallRequest) {
-      actions!.initiateVideoCall(messageModel.type);
-      return;
-    }
 
     actions!.addToList(messageModel, received: true);
 
