@@ -32,24 +32,26 @@ class VideoCallController extends StateNotifier<void> {
   late RtcEngine rtcEngine;
   final Ref ref;
 
-  Future<void> setupVideoSDKEngine() async {
+  Future<void> setupVideoSDKEngine(bool audioOnly) async {
     await [Permission.microphone, Permission.camera].request();
 
-    const configuration = VideoEncoderConfiguration(
-      dimensions: VideoDimensions(
-        width: 1920,
-        height: 1080,
-      ),
-      advanceOptions: AdvanceOptions(
-        compressionPreference: CompressionPreference.preferQuality,
-        encodingPreference: EncodingPreference.preferAuto,
-      ),
-      codecType: VideoCodecType.videoCodecGenericH264,
-      degradationPreference: DegradationPreference.maintainQuality,
-      orientationMode: OrientationMode.orientationModeFixedPortrait,
-    );
+    if (!audioOnly) {
+      const configuration = VideoEncoderConfiguration(
+        dimensions: VideoDimensions(
+          width: 1920,
+          height: 1080,
+        ),
+        advanceOptions: AdvanceOptions(
+          compressionPreference: CompressionPreference.preferLowLatency,
+          encodingPreference: EncodingPreference.preferAuto,
+        ),
+        codecType: VideoCodecType.videoCodecGenericH264,
+        degradationPreference: DegradationPreference.maintainBalanced,
+        orientationMode: OrientationMode.orientationModeFixedPortrait,
+      );
 
-    await rtcEngine.setVideoEncoderConfiguration(configuration);
+      await rtcEngine.setVideoEncoderConfiguration(configuration);
+    }
 
     try {
       rtcEngine.registerEventHandler(RtcEngineEventHandler(
@@ -57,12 +59,14 @@ class VideoCallController extends StateNotifier<void> {
           log("local user ${connection.localUid} joined in ${connection.channelId}");
 
           ref.read(joinedInChannel.notifier).state = true;
-          try {
-            rtcEngine.startPreview(
-              sourceType: VideoSourceType.videoSourceCamera,
-            );
-          } catch (e) {
-            log("startPreview-Error: ${e.toString()}");
+          if (!audioOnly) {
+            try {
+              rtcEngine.startPreview(
+                sourceType: VideoSourceType.videoSourceCamera,
+              );
+            } catch (e) {
+              log("startPreview-Error: ${e.toString()}");
+            }
           }
         },
         onUserJoined: (connection, remoteUid, elapsed) {
@@ -90,7 +94,7 @@ class VideoCallController extends StateNotifier<void> {
     required String channelName,
     required int uid,
     required String token,
-    required bool audioOnly ,
+    required bool audioOnly,
     required ClientRoleType role,
   }) async {
     try {
@@ -105,12 +109,13 @@ class VideoCallController extends StateNotifier<void> {
         uid: uid,
         options: ChannelMediaOptions(
           clientRoleType: role,
-          channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
+          channelProfile: ChannelProfileType.channelProfileCommunication,
         ),
       );
 
       log("joinChannel Success");
     } catch (e) {
+      log("joinChannel Error: ${e.runtimeType.toString()}");
       log("joinChannel Error: ${e.toString()}");
     }
   }

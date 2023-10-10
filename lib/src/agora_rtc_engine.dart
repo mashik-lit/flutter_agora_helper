@@ -17,7 +17,6 @@ class AgoraRtcEngine {
       final engine = createAgoraRtcEngine();
       engine.initialize(RtcEngineContext(
         appId: appId,
-        channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
       ));
 
       _instance ??= AgoraRtcEngine._(engine);

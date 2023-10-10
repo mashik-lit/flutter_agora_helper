@@ -48,7 +48,13 @@ mixin AgoraRtmMixin {
       throw Exception("Initialize the channel to send a message");
     }
     try {
-      await channel!.sendMessage(AgoraRtmMessage.fromText(message.toString()));
+      await channel!.sendMessage2(RtmMessage.fromText(message.toString()));
+      if (!theOtherIsOnline && actions!.getPeerId() != null) {
+        client.sendMessageToPeer2(
+          actions!.getPeerId()!,
+          RtmMessage.fromText(message.toString()),
+        );
+      }
       log("message sent to ${channel!.channelId}");
     } catch (e) {
       log("sendMessage Error: ${e.toString()}");
@@ -67,10 +73,10 @@ mixin AgoraRtmMixin {
   }
 
   Future<void> onMessageReceived(
-    AgoraRtmMessage message,
-    AgoraRtmMember fromMember,
+    RtmMessage message,
+    RtmChannelMember fromMember,
   ) async {
-    log("essage_received: ${message.text}");
+    log("message_received: ${message.text}");
     final messageModel = MessageModel.fromJson(message.text);
 
     actions!.addToList(messageModel, received: true);
@@ -80,12 +86,12 @@ mixin AgoraRtmMixin {
     actions!.updateUI();
   }
 
-  void onMemberJoined(AgoraRtmMember member) {
+  void onMemberJoined(RtmChannelMember member) {
     theOtherIsOnline = true;
     actions!.updateUI();
   }
 
-  void onMemberLeft(AgoraRtmMember member) {
+  void onMemberLeft(RtmChannelMember member) {
     theOtherIsOnline = false;
     actions!.updateUI();
   }

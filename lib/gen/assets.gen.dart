@@ -179,12 +179,15 @@ class SvgGenImage {
       alignment: alignment,
       allowDrawingOutsideViewBox: allowDrawingOutsideViewBox,
       placeholderBuilder: placeholderBuilder,
-      color: color,
-      colorBlendMode: colorBlendMode,
+      colorFilter: color == null
+          ? null
+          : ColorFilter.mode(
+              color,
+              BlendMode.srcATop,
+            ),
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
       clipBehavior: clipBehavior,
-      cacheColorFilter: cacheColorFilter,
     );
   }
 

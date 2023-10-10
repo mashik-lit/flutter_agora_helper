@@ -27,6 +27,8 @@ enum MessageTypes {
     }
   }
 
+  
+
   static MessageTypes fromString(String string) {
     switch (string) {
       case 'text':

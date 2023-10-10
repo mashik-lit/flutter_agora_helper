@@ -5,4 +5,5 @@ abstract class ChatScreenActions {
   void addToList(MessageModel model, {bool received = false});
   void scrollToBottom();
   void updateUI();
+  String? getPeerId();
 }

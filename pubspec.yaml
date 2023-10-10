@@ -8,17 +8,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  agora_rtc_engine: ^6.1.1+1
-  agora_rtm: ^1.5.0
+  agora_chat_sdk: ^1.1.1
+  agora_rtc_engine: ^6.2.2
+  agora_rtm: ^1.5.8
   cached_network_image: ^3.2.3
-  flutter_svg: ^2.0.6
-  flutter_riverpod: ^2.2.0
-  permission_handler: ^10.2.0
+  flutter_riverpod: ^2.3.10
+  flutter_svg: ^2.0.7
+  permission_handler: ^10.4.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.3
   flutter_gen_runner: ^5.3.1
 
 flutter_gen:

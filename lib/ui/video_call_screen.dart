@@ -4,7 +4,6 @@ import 'package:flutter_agora_helper/ui/no_video_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../gen/assets.gen.dart';
-import '../theme/text_styles.dart';
 import '../src/agora_rtc_engine.dart';
 import '../src/video_call_controller/video_call_controller.dart';
 import 'buttons.dart';
@@ -45,7 +44,9 @@ class _VideoCallScreenState extends ConsumerState<VideoCallScreen> {
   }
 
   Future<void> startCall() async {
-    await ref.read(videoCallController.notifier).setupVideoSDKEngine();
+    await ref
+        .read(videoCallController.notifier)
+        .setupVideoSDKEngine(widget.audioOnly);
     await ref.read(videoCallController.notifier).joinRTCCall(
           channelName: widget.channelName,
           uid: widget.uid,
@@ -66,6 +67,7 @@ class _VideoCallScreenState extends ConsumerState<VideoCallScreen> {
     });
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Stack(
           children: [

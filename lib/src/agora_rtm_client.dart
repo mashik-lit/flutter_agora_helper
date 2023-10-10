@@ -8,41 +8,17 @@ class RtmClient {
   RtmClient._(AgoraRtmClient rtmClient) {
     client = rtmClient;
 
-//     client.sendLocalInvitation({
-//       "calleeId": "2",
-//       "content": "",
-//       "channelId": "rtc-35-10",
-//     });
-
-//     client.cancelLocalInvitation({
-//       "calleeId": "2",
-//       "content": "",
-//       "channelId": "rtc-35-10",
-//     });
-// client.onLocalInvitationAccepted = null;
-
-// client.localinvi
-
-    // client.acceptRemoteInvitation(arguments)
-
-    client.onMessageReceived = (AgoraRtmMessage message, String peerId) {
-      log("Peer msg: $peerId, msg: ${message.text}");
+    client.onConnectionStateChanged2 =
+        (RtmConnectionState state, RtmConnectionChangeReason reason) {
+      log('csc: $state, reason: $reason');
     };
 
-    client.onConnectionStateChanged = (int state, int reason) {
-      log('csc: ${connectionState(state)}, reason: ${connectionChangeReason(reason)}');
-      if (state == 5) {
-        client.logout();
-        log('Logout.');
-      }
+    client.getRtmCallManager().onLocalInvitationReceivedByPeer = (LocalInvitation invite) {
+      log('Local invitation received by peer: ${invite.calleeId}, content: ${invite.content}, ${invite.channelId}');
     };
 
-    client.onLocalInvitationReceivedByPeer = (AgoraRtmLocalInvitation invite) {
-      log('Local invitation received by peer: ${invite.calleeId}, content: ${invite.content}');
-    };
-
-    client.onRemoteInvitationReceivedByPeer =
-        (AgoraRtmRemoteInvitation invite) {
+    client.getRtmCallManager().onRemoteInvitationReceived =
+        (RemoteInvitation invite) {
       log('Remote invitation received by peer: ${invite.callerId}, content: ${invite.content}');
     };
   }
